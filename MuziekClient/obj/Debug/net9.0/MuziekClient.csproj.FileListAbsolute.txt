@@ -1,0 +1,15 @@
+C:\Users\alecp\RiderProjects\SpotifyCLI\MuziekClient\obj\Debug\net9.0\MuziekClient.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\alecp\RiderProjects\SpotifyCLI\MuziekClient\obj\Debug\net9.0\MuziekClient.AssemblyInfoInputs.cache
+C:\Users\alecp\RiderProjects\SpotifyCLI\MuziekClient\obj\Debug\net9.0\MuziekClient.AssemblyInfo.cs
+C:\Users\alecp\RiderProjects\SpotifyCLI\MuziekClient\obj\Debug\net9.0\MuziekClient.csproj.CoreCompileInputs.cache
+C:\Users\alecp\RiderProjects\SpotifyCLI\MuziekClient\obj\Debug\net9.0\MuziekClient.sourcelink.json
+C:\Users\alecp\RiderProjects\SpotifyCLI\MuziekClient\bin\Debug\net9.0\MuziekClient.exe
+C:\Users\alecp\RiderProjects\SpotifyCLI\MuziekClient\bin\Debug\net9.0\MuziekClient.deps.json
+C:\Users\alecp\RiderProjects\SpotifyCLI\MuziekClient\bin\Debug\net9.0\MuziekClient.runtimeconfig.json
+C:\Users\alecp\RiderProjects\SpotifyCLI\MuziekClient\bin\Debug\net9.0\MuziekClient.dll
+C:\Users\alecp\RiderProjects\SpotifyCLI\MuziekClient\bin\Debug\net9.0\MuziekClient.pdb
+C:\Users\alecp\RiderProjects\SpotifyCLI\MuziekClient\obj\Debug\net9.0\MuziekClient.dll
+C:\Users\alecp\RiderProjects\SpotifyCLI\MuziekClient\obj\Debug\net9.0\refint\MuziekClient.dll
+C:\Users\alecp\RiderProjects\SpotifyCLI\MuziekClient\obj\Debug\net9.0\MuziekClient.pdb
+C:\Users\alecp\RiderProjects\SpotifyCLI\MuziekClient\obj\Debug\net9.0\MuziekClient.genruntimeconfig.cache
+C:\Users\alecp\RiderProjects\SpotifyCLI\MuziekClient\obj\Debug\net9.0\ref\MuziekClient.dll
