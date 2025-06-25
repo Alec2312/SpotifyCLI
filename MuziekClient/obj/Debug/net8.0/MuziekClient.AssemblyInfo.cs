@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MuziekClient")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a14fe2fc7ea8a9a2aed25a9e6762d482eba7b0db")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d5a28b6707ad8434517f99d39b8170bcf07d45be")]
 [assembly: System.Reflection.AssemblyProductAttribute("MuziekClient")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MuziekClient")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

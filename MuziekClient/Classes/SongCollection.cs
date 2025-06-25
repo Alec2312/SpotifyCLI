@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading; // Nodig voor CancellationToken (via Song)
 
 namespace MuziekClient.Classes
 {
@@ -22,9 +21,6 @@ namespace MuziekClient.Classes
             return Songs.Sum(song => song.DurationInSeconds);
         }
 
-        // De PlayAll en ShuffleAndPlay methoden zullen niet meer zelf de loop beheren.
-        // Ze bereiden alleen de nummers voor in de juiste volgorde.
-        // De daadwerkelijke afspeellogica (met pauzeren/stoppen/volgende) komt in User.cs
         public virtual List<Song> GetSongsForPlayback(bool shuffle = false)
         {
             if (!Songs.Any())
@@ -41,14 +37,43 @@ namespace MuziekClient.Classes
             else
             {
                 Console.WriteLine($"Voorbereiden van '{Title}' in sequentiële volgorde...");
-                return new List<Song>(Songs); // Retourneer een kopie
+                return new List<Song>(Songs);
             }
         }
 
         public Playlist CompareWith(SongCollection other)
         {
-            var sharedSongs = Songs.Intersect(other.Songs).ToList();
+            var sharedSongs = Songs.Intersect(other.Songs, new SongComparer()).ToList();
             return new Playlist($"Overeenkomstige nummers tussen '{this.Title}' en '{other.Title}'", sharedSongs);
+        }
+
+        private class SongComparer : IEqualityComparer<Song>
+        {
+            public bool Equals(Song? x, Song? y)
+            {
+                if (ReferenceEquals(x, y)) return true;
+                if (ReferenceEquals(x, null) || ReferenceEquals(y, null)) return false;
+                return x.Title.Equals(y.Title, StringComparison.OrdinalIgnoreCase) &&
+                       x.Artist.Equals(y.Artist, StringComparison.OrdinalIgnoreCase);
+            }
+
+            public int GetHashCode(Song obj)
+            {
+                return HashCode.Combine(obj.Title.ToLower(), obj.Artist.ToLower());
+            }
+        }
+
+        public abstract void DisplayInfo();
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not SongCollection other) return false;
+            return Title.Equals(other.Title, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public override int GetHashCode()
+        {
+            return Title.ToLower().GetHashCode();
         }
     }
 }

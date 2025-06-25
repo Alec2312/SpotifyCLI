@@ -1,20 +1,30 @@
 // Bestand: Song.cs
 using System;
-using System.Threading; // Nodig voor Thread.Sleep en CancellationToken
-using System.Threading.Tasks; // Nodig voor Task.Delay
+using System.Threading;
 
 namespace MuziekClient.Classes
 {
+    // Genre enum is hier geplaatst
+    public enum Genre
+    {
+        Pop,
+        Rock,
+        Metal,
+        RnB,
+        HipHop,
+        Electronic,
+        Classical,
+        Jazz,
+        Blues,
+        Country
+    }
+
     public class Song
     {
         public string Title { get; private set; }
         public string Artist { get; private set; }
         public int DurationInSeconds { get; private set; }
         public Genre Genre { get; private set; }
-
-        // Deze eigenschappen zijn nu public set om directere controle vanuit de Program-klasse mogelijk te maken.
-        public bool IsPlaying { get; set; } = false;
-        public bool IsPaused { get; set; } = false;
 
         public Song(string title, string artist, int durationInSeconds, Genre genre)
         {
@@ -24,76 +34,21 @@ namespace MuziekClient.Classes
             Genre = genre;
         }
 
-        public async void Play(CancellationToken cancellationToken)
+        // De Play, Pause, Stop methoden hier zijn nu alleen voor simulatiedoeleinden
+        // De echte afspeellogica en interactie zit in PlaySongBlocking van User.cs
+        public void PlayMessage()
         {
-            if (IsPlaying && !IsPaused)
-            {
-                Console.WriteLine($"'{Title}' speelt al af.");
-                return;
-            }
-
-            if (IsPaused)
-            {
-                Console.WriteLine($"Hervat afspelen: {Title} - {Artist}");
-                IsPaused = false;
-            }
-            else
-            {
-                Console.WriteLine($"Speelt af: {Title} - {Artist} ({TimeSpan.FromSeconds(DurationInSeconds):mm\\:ss})");
-            }
-
-            IsPlaying = true;
-            int elapsedSeconds = 0;
-
-            while (elapsedSeconds < DurationInSeconds)
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    Stop();
-                    return;
-                }
-                while (IsPaused)
-                {
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        Stop();
-                        return;
-                    }
-                    await Task.Delay(100);
-                }
-
-                await Task.Delay(1000);
-                elapsedSeconds++;
-            }
-            Console.WriteLine($"\n'{Title}' is afgelopen.");
-            Stop();
+            Console.WriteLine($"Afspelen gesimuleerd voor: {Title} - {Artist}");
         }
 
-        public void Pause()
+        public void PauseMessage()
         {
-            if (IsPlaying && !IsPaused)
-            {
-                Console.WriteLine($"Pauzeert: {Title} - {Artist}");
-                IsPaused = true;
-            }
-            else if (IsPlaying && IsPaused)
-            {
-                Console.WriteLine($"'{Title}' is al gepauzeerd.");
-            }
-            else
-            {
-                Console.WriteLine($"'{Title}' speelt niet af en kan niet gepauzeerd worden.");
-            }
+            Console.WriteLine($"'{Title}' gepauzeerd.");
         }
 
-        public void Stop()
+        public void StopMessage()
         {
-            if (IsPlaying || IsPaused)
-            {
-                Console.WriteLine($"Stopt met afspelen: {Title} - {Artist}");
-                IsPlaying = false;
-                IsPaused = false;
-            }
+            Console.WriteLine($"'{Title}' gestopt.");
         }
 
         public void DisplaySongInfo()
