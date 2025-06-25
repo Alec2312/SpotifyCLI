@@ -7,7 +7,11 @@ namespace MuziekClient.Classes
 {
     class Program
     {
-        private static MusicLibrary musicLibrary = new MusicLibrary();
+        // Deze lijsten fungeren nu als de centrale opslag, in plaats van MusicLibrary
+        public static List<Song> AllSongs { get; private set; } = new List<Song>();
+        public static List<Album> AllAlbums { get; private set; } = new List<Album>();
+        public static List<User> RegisteredUsers { get; private set; } = new List<User>();
+
         private static User? currentUser = null;
 
         static void Main(string[] args)
@@ -25,11 +29,13 @@ namespace MuziekClient.Classes
                     // Delegeer de hoofdmenu-loop naar de actieve gebruiker
                     if (currentUser is SuperUser adminUser)
                     {
-                        adminUser.RunSuperUserMainMenu(musicLibrary, ref currentUser); // Geef MusicLibrary mee
+                        // Geeft geen musicLibrary object meer mee
+                        adminUser.RunSuperUserMainMenu(ref currentUser);
                     }
                     else
                     {
-                        currentUser.RunUserMainMenu(musicLibrary, ref currentUser); // Geef MusicLibrary mee
+                        // Geeft geen musicLibrary object meer mee
+                        currentUser.RunUserMainMenu(ref currentUser);
                     }
                 }
             }
@@ -46,28 +52,30 @@ namespace MuziekClient.Classes
             var smoothCriminal = new Song("Smooth Criminal", "Michael Jackson", 258, Genre.Pop);
             var summerBreeze = new Song("Summer Breeze", "Seals and Crofts", 305, Genre.Country);
 
-            musicLibrary.AddSong(bohemianRhapsody);
-            musicLibrary.AddSong(thriller);
-            musicLibrary.AddSong(hotelCalifornia);
-            musicLibrary.AddSong(billieJean);
-            musicLibrary.AddSong(fadeToBlack);
-            musicLibrary.AddSong(smoothCriminal);
-            musicLibrary.AddSong(summerBreeze);
+            // Nummers direct toevoegen aan Program.AllSongs
+            AllSongs.Add(bohemianRhapsody);
+            AllSongs.Add(thriller);
+            AllSongs.Add(hotelCalifornia);
+            AllSongs.Add(billieJean);
+            AllSongs.Add(fadeToBlack);
+            AllSongs.Add(smoothCriminal);
+            AllSongs.Add(summerBreeze);
 
             // Albums
             var queenGreatestHits = new Album("Queen's Greatest Hits", "Queen");
             queenGreatestHits.AddSong(bohemianRhapsody);
-            musicLibrary.AddAlbum(queenGreatestHits);
+            // Albums direct toevoegen aan Program.AllAlbums
+            AllAlbums.Add(queenGreatestHits);
 
             var thrillerAlbum = new Album("Thriller", "Michael Jackson");
             thrillerAlbum.AddSong(thriller);
             thrillerAlbum.AddSong(billieJean);
             thrillerAlbum.AddSong(smoothCriminal);
-            musicLibrary.AddAlbum(thrillerAlbum);
+            AllAlbums.Add(thrillerAlbum);
 
             var masterOfPuppets = new Album("Master of Puppets", "Metallica");
             masterOfPuppets.AddSong(fadeToBlack);
-            musicLibrary.AddAlbum(masterOfPuppets);
+            AllAlbums.Add(masterOfPuppets);
 
             // Bestaande Gebruikers (hardcoded voor demo)
             var alice = new User("Alice");
@@ -75,14 +83,15 @@ namespace MuziekClient.Classes
             var charlie = new User("Charlie");
             var david = new User("David");
             var eve = new User("Eve");
-            var admin = new SuperUser("Admin"); // SuperUser account
+            var admin = new SuperUser("Admin");
 
-            musicLibrary.RegisterUser(alice);
-            musicLibrary.RegisterUser(bob);
-            musicLibrary.RegisterUser(charlie);
-            musicLibrary.RegisterUser(david);
-            musicLibrary.RegisterUser(eve);
-            musicLibrary.RegisterUser(admin); // Registreer de SuperUser
+            // Gebruikers direct registreren in Program.RegisteredUsers
+            RegisteredUsers.Add(alice);
+            RegisteredUsers.Add(bob);
+            RegisteredUsers.Add(charlie);
+            RegisteredUsers.Add(david);
+            RegisteredUsers.Add(eve);
+            RegisteredUsers.Add(admin);
 
             // Alice's speellijsten
             var aliceRockPlaylist = alice.CreatePlaylist("Alice's Rock Favorieten");
@@ -105,8 +114,6 @@ namespace MuziekClient.Classes
             var charlieChillPlaylist = charlie.CreatePlaylist("Charlie's Chill Vibes");
             charlieChillPlaylist.AddSong(hotelCalifornia);
             charlieChillPlaylist.AddSong(summerBreeze);
-
-            // Vrienden toevoegen functionaliteit is verwijderd.
         }
 
         static void ShowLoginMenu()
@@ -128,7 +135,8 @@ namespace MuziekClient.Classes
         {
             Console.Write("Voer gebruikersnaam in: ");
             string? username = Console.ReadLine();
-            currentUser = musicLibrary.RegisteredUsers.FirstOrDefault(u => u.Name.Equals(username, StringComparison.OrdinalIgnoreCase));
+            // Gebruikt nu Program.RegisteredUsers
+            currentUser = RegisteredUsers.FirstOrDefault(u => u.Name.Equals(username, StringComparison.OrdinalIgnoreCase));
             if (currentUser == null) Console.WriteLine("Gebruiker niet gevonden. Probeer opnieuw of registreer een nieuw account.");
             else Console.WriteLine($"Welkom, {currentUser.Name}!");
         }
@@ -139,15 +147,16 @@ namespace MuziekClient.Classes
             string? newUsername = Console.ReadLine();
 
             if (string.IsNullOrWhiteSpace(newUsername)) { Console.WriteLine("Gebruikersnaam mag niet leeg zijn."); return; }
-            if (musicLibrary.RegisteredUsers.Any(u => u.Name.Equals(newUsername, StringComparison.OrdinalIgnoreCase)))
+            // Gebruikt nu Program.RegisteredUsers
+            if (RegisteredUsers.Any(u => u.Name.Equals(newUsername, StringComparison.OrdinalIgnoreCase)))
             { Console.WriteLine($"Gebruikersnaam '{newUsername}' bestaat al. Kies een andere naam."); return; }
 
             User newUser = new User(newUsername);
-            musicLibrary.RegisterUser(newUser);
+            // Voegt toe aan Program.RegisteredUsers
+            RegisteredUsers.Add(newUser);
             Console.WriteLine($"Gebruiker '{newUsername}' succesvol geregistreerd! U kunt nu inloggen.");
         }
 
-        // Hulpmethoden voor algemene console-invoer
         public static int GetIntegerInput(string prompt)
         {
             int result;

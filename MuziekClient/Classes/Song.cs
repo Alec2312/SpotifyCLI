@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace MuziekClient.Classes
 {
-    // Genre enum is hier geplaatst
+    // Genre enum verplaatst van Genre.cs naar hier
     public enum Genre
     {
         Pop,

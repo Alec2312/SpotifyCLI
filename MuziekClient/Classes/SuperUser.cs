@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Bestand: SuperUser.cs
+using System;
 using System.Linq;
 
 namespace MuziekClient.Classes
@@ -10,19 +11,41 @@ namespace MuziekClient.Classes
             Console.WriteLine($"SuperUser '{Name}' is aangemaakt.");
         }
 
-        public void AddSongToLibrary(MusicLibrary library, Song song)
+        // AddSongToLibrary past nu Program.AllSongs aan
+        public void AddSongToLibrary(Song song)
         {
             Console.WriteLine($"SuperUser {Name} voegt nummer toe aan bibliotheek: {song.Title} - {song.Artist}");
-            library.AddSong(song);
+            if (!Program.AllSongs.Any(s => s.Title.Equals(song.Title, StringComparison.OrdinalIgnoreCase) && s.Artist.Equals(song.Artist, StringComparison.OrdinalIgnoreCase)))
+            {
+                Program.AllSongs.Add(song);
+            }
+            else
+            {
+                Console.WriteLine($"Song '{song.Title}' is already in the library.");
+            }
         }
 
-        public void AddAlbumToLibrary(MusicLibrary library, Album album)
+        // AddAlbumToLibrary past nu Program.AllAlbums aan
+        public void AddAlbumToLibrary(Album album)
         {
             Console.WriteLine($"SuperUser {Name} voegt album toe aan bibliotheek: {album.Title} by {album.Artist}");
-            library.AddAlbum(album);
+            if (!Program.AllAlbums.Any(a => a.Title.Equals(album.Title, StringComparison.OrdinalIgnoreCase) && a.Artist.Equals(album.Artist, StringComparison.OrdinalIgnoreCase)))
+            {
+                Program.AllAlbums.Add(album);
+                // Voeg ook de nummers van het album toe aan de globale lijst
+                foreach (var song in album.Songs)
+                {
+                    AddSongToLibrary(song); // Gebruik de SuperUser's methode om het nummer toe te voegen
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Album '{album.Title}' is already in the library.");
+            }
         }
 
-        public void RunSuperUserMainMenu(MusicLibrary musicLibrary, ref User? currentUser)
+        // MusicLibrary parameter verwijderd
+        public void RunSuperUserMainMenu(ref User? currentUser)
         {
             while (true)
             {
@@ -33,8 +56,8 @@ namespace MuziekClient.Classes
 
                 switch (choice)
                 {
-                    case "1": base.RunUserMainMenu(musicLibrary, ref currentUser); break; // Ga naar het normale gebruikersmenu
-                    case "2": ManageLibraryContentInteractively(musicLibrary); break;
+                    case "1": base.RunUserMainMenu(ref currentUser); break; // Ga naar het normale gebruikersmenu
+                    case "2": ManageLibraryContentInteractively(); break;
                     case "3": StopPlayback(); currentUser = null; Console.WriteLine("U bent afgemeld."); return;
                     case "4": StopPlayback(); Console.WriteLine("Bedankt voor het gebruiken van MuziekClient!"); Environment.Exit(0); break;
                     default: Console.WriteLine("Ongeldige keuze. Probeer opnieuw."); break;
@@ -42,7 +65,8 @@ namespace MuziekClient.Classes
             }
         }
 
-        private void ManageLibraryContentInteractively(MusicLibrary musicLibrary)
+        // MusicLibrary parameter verwijderd
+        private void ManageLibraryContentInteractively()
         {
             while (true)
             {
@@ -51,25 +75,27 @@ namespace MuziekClient.Classes
                 string? choice = Console.ReadLine();
                 switch (choice)
                 {
-                    case "1": AddSongToLibraryInteractively(musicLibrary); break;
-                    case "2": AddAlbumToLibraryInteractively(musicLibrary); break;
+                    case "1": AddSongToLibraryInteractively(); break;
+                    case "2": AddAlbumToLibraryInteractively(); break;
                     case "3": return;
                     default: Console.WriteLine("Ongeldige keuze."); break;
                 }
             }
         }
 
-        private void AddSongToLibraryInteractively(MusicLibrary musicLibrary)
+        // AddSongToLibraryInteractively roept nu de AddSongToLibrary van de SuperUser aan
+        private void AddSongToLibraryInteractively()
         {
             Console.Write("Titel nummer: "); string? songTitle = Console.ReadLine();
             Console.Write("Artiest nummer: "); string? songArtist = Console.ReadLine();
             Console.Write("Duur in seconden: "); int songDuration = Program.GetIntegerInput("0");
             Console.Write("Genre (Pop, Rock, Metal, RnB, HipHop, Electronic, Classical, Jazz, Blues, Country): ");
-            if (Enum.TryParse(Console.ReadLine(), true, out Genre songGenre)) AddSongToLibrary(musicLibrary, new Song(songTitle!, songArtist!, songDuration, songGenre));
+            if (Enum.TryParse(Console.ReadLine(), true, out Genre songGenre)) AddSongToLibrary(new Song(songTitle!, songArtist!, songDuration, songGenre));
             else Console.WriteLine("Ongeldig genre.");
         }
 
-        private void AddAlbumToLibraryInteractively(MusicLibrary musicLibrary)
+        // AddAlbumToLibraryInteractively roept nu de AddAlbumToLibrary van de SuperUser aan
+        private void AddAlbumToLibraryInteractively()
         {
             Console.Write("Titel album: "); string? albumTitle = Console.ReadLine();
             Console.Write("Artiest album: "); string? albumArtist = Console.ReadLine();
@@ -85,7 +111,7 @@ namespace MuziekClient.Classes
                 if (Enum.TryParse(Console.ReadLine(), true, out Genre newAlbumSongGenre)) newAlbum.AddSong(new Song(newAlbumSongTitle!, newAlbumSongArtist!, newAlbumSongDuration, newAlbumSongGenre));
                 else Console.WriteLine("Ongeldig genre.");
             }
-            AddAlbumToLibrary(musicLibrary, newAlbum);
+            AddAlbumToLibrary(newAlbum);
         }
     }
 }
