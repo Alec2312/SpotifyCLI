@@ -41,28 +41,6 @@ namespace MuziekClient.Classes
             }
         }
 
-        public Playlist CompareWith(SongCollection other)
-        {
-            var sharedSongs = Songs.Intersect(other.Songs, new SongComparer()).ToList();
-            return new Playlist($"Overeenkomstige nummers tussen '{this.Title}' en '{other.Title}'", sharedSongs);
-        }
-
-        private class SongComparer : IEqualityComparer<Song>
-        {
-            public bool Equals(Song? x, Song? y)
-            {
-                if (ReferenceEquals(x, y)) return true;
-                if (ReferenceEquals(x, null) || ReferenceEquals(y, null)) return false;
-                return x.Title.Equals(y.Title, StringComparison.OrdinalIgnoreCase) &&
-                       x.Artist.Equals(y.Artist, StringComparison.OrdinalIgnoreCase);
-            }
-
-            public int GetHashCode(Song obj)
-            {
-                return HashCode.Combine(obj.Title.ToLower(), obj.Artist.ToLower());
-            }
-        }
-
         public abstract void DisplayInfo();
 
         public override bool Equals(object? obj)
